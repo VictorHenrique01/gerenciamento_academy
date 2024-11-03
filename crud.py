@@ -33,9 +33,9 @@ def editar_aluno(db: Session, aluno_id: int, nome: str = None, idade: int = None
         print(f"Erro ao editar aluno: {e}")
 
 # Cadastrar Instrutor
-def cadastrar_instrutor(db: Session, nome: str):
+def cadastrar_instrutor(db: Session, nome: str, idade: int, especialidade: str, horario_trabalho: str):
     try:
-        instrutor = Instrutor(nome=nome)
+        instrutor = Instrutor(nome=nome, idade=idade, especialidade = especialidade, horario_trabalho=horario_trabalho)
         db.add(instrutor)
         db.commit()
         db.refresh(instrutor)
