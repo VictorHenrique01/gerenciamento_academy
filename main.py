@@ -11,12 +11,12 @@ def main():
         print("\nBem-vindo ao Sistema de Gerenciamento de Academia")
         print("1. Cadastrar Aluno")
         print("2. Editar Dados do Aluno")
-        print("3. Cadastrar Instrutor")
+        print("3. Cadastrar Instrutor(a)")
         print("4. Cadastrar Plano")
         print("5. Editar Plano")
         print("6. Excluir Plano")
         print("7. Verificar disponibilidade do equipamento")
-        print("8. Disponibilidade do instrutor")
+        print("8. Disponibilidade do(a) instrutor(a)")
         print("9. Criar turma")
         print("0. Sair")
         
@@ -36,21 +36,21 @@ def main():
             crud.editar_aluno(db, aluno_id, nome if nome else None, int(idade) if idade else None, int(plano_id) if plano_id else None)
 
         elif escolha == "3":
-            nome = input("Nome do Instrutor: ")
-            especialidade = input("Especialidade do instrutor: ")
-            horario_trabalho = input("Trabalha em qual período? | Insira uma das opções: Manhã, Tarde ou Noite? ")
+            nome = input("Nome do(a) Instrutor(a): ")
+            especialidade = input("Especialidade do instrutor(a): ")
+            horario_trabalho = input("Trabalha em qual período? | Digite uma das opções abaixo:\nManhã, Tarde ou Noite? ")
             crud.cadastrar_instrutor(db, nome, especialidade, horario_trabalho)
 
         elif escolha == "4":
-            nome = input("Tipo de Plano seria Mensal, Trimestral ou Anual? ")
-            preco = float(input("Preço do Plano: "))
-            crud.cadastrar_plano(db, nome, preco)
+            tipo = input("Digite o tipo de plano desejado conforme as opções abaixo:\nMensal, Trimestral ou Anual? ")
+            preco = int(input("Preço do Plano: "))
+            crud.cadastrar_plano(db, tipo, preco)
 
         elif escolha == "5":
             plano_id = int(input("ID do Plano: "))
-            nome = input("Novo Nome do Plano (ou Enter para manter): ")
+            tipo = input("Novo tipo do Plano (ou Enter para manter): ")
             preco = input("Novo preço do Plano (ou Enter para manter): ")
-            crud.editar_plano(db, plano_id, nome if nome else None, int(preco) if preco else None)
+            crud.editar_plano(db, plano_id, tipo if tipo else None, int(preco) if preco else None)
 
         elif escolha == "6":
             plano_id = int(input("ID do Plano para excluir: "))

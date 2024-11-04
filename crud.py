@@ -69,12 +69,12 @@ def cadastrar_plano(db: Session, tipo: str, preco: int):
     except Exception as e:
         print(f"Erro ao cadastrar plano: {e}")
 
-def editar_plano(db: Session, plano_id: int, nome: str = None, preco: int = None):
+def editar_plano(db: Session, plano_id: int, tipo: str = None, preco: int = None):
     try:
         plano = db.query(Plano).filter(Plano.id == plano_id).first()
         if plano:
-            if nome:
-                plano.nome = nome
+            if tipo:
+                plano.tipo = tipo
             if preco:
                 plano.preco = preco
             db.commit()
