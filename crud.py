@@ -33,9 +33,9 @@ def editar_aluno(db: Session, aluno_id: int, nome: str = None, idade: int = None
         print(f"Erro ao editar aluno: {e}")
 
 # Cadastrar Instrutor
-def cadastrar_instrutor(db: Session, nome: str, idade: int, especialidade: str, horario_trabalho: str):
+def cadastrar_instrutor(db: Session, nome: str, especialidade: str, horario_trabalho: str):
     try:
-        instrutor = Instrutor(nome=nome, idade=idade, especialidade = especialidade, horario_trabalho=horario_trabalho)
+        instrutor = Instrutor(nome=nome, especialidade = especialidade, horario_trabalho=horario_trabalho)
         db.add(instrutor)
         db.commit()
         db.refresh(instrutor)
@@ -43,10 +43,25 @@ def cadastrar_instrutor(db: Session, nome: str, idade: int, especialidade: str, 
     except Exception as e:
         print(f"Erro ao cadastrar instrutor: {e}")
 
-# Gerenciar Planos (Criar, Editar, Remover)
-def cadastrar_plano(db: Session, nome: str, preco: int):
+# Em crud.py
+
+def consultar_disponibilidade_instrutor(db: Session, periodo: str):
     try:
-        plano = Plano(nome=nome, preco=preco)
+        instrutores = db.query(Instrutor).filter(Instrutor.horario_trabalho == periodo).all()
+        if instrutores:
+            print(f"Instrutores disponíveis no período {periodo}:")
+            for instrutor in instrutores:
+                print(f"- {instrutor.nome} (Especialidade: {instrutor.especialidade})")
+        else:
+            print(f"Nenhum instrutor disponível no período {periodo}.")
+    except Exception as e:
+        print(f"Erro ao consultar disponibilidade de instrutores: {e}")
+
+
+# Gerenciar Planos (Criar, Editar, Remover)
+def cadastrar_plano(db: Session, tipo: str, preco: int):
+    try:
+        plano = Plano(tipo=tipo, preco=preco)
         db.add(plano)
         db.commit()
         db.refresh(plano)
@@ -83,18 +98,15 @@ def excluir_plano(db: Session, plano_id: int):
         print(f"Erro ao excluir plano: {e}")
 
 # Reservar Aula Coletiva (Associação entre Aluno e Turma)
-def reservar_aula(db: Session, aluno_id: int, turma_id: int):
+def criar_turma(db: Session, nome: str, horario: str, instrutor_id: int):
     try:
-        aluno = db.query(Aluno).filter(Aluno.id == aluno_id).first()
-        turma = db.query(Turma).filter(Turma.id == turma_id).first()
-        if aluno and turma:
-            turma.alunos.append(aluno)  # Supondo que Turma tenha um relacionamento 'alunos'
-            db.commit()
-            print("Aula reservada com sucesso!")
-        else:
-            print("Aluno ou turma não encontrados.")
+        turma = Turma(nome=nome, horario=horario, instrutor_id=instrutor_id)
+        db.add(turma)
+        db.commit()
+        db.refresh(turma)
+        print("Turma criada com sucesso!")
     except Exception as e:
-        print(f"Erro ao reservar aula: {e}")
+        print(f"Erro ao criar turma: {e}")
 
 # Controle de Equipamentos (CRUD)
 def cadastrar_equipamento(db: Session, nome: str, quantidade: int, manutencao: str):
@@ -106,22 +118,21 @@ def cadastrar_equipamento(db: Session, nome: str, quantidade: int, manutencao: s
     except Exception as e:
         print(f"Erro ao cadastrar equipamento: {e}")
 
-def editar_equipamento(db: Session, equipamento_id: int, nome: str = None, quantidade: int = None, manutencao: str = None):
+# Em crud.py
+
+def consultar_equipamento(db: Session, nome_equipamento: str):
     try:
-        equipamento = db.query(Equipamento).filter(Equipamento.id == equipamento_id).first()
+        equipamento = db.query(Equipamento).filter(Equipamento.nome == nome_equipamento).first()
         if equipamento:
-            if nome:
-                equipamento.nome = nome
-            if quantidade:
-                equipamento.quantidade = quantidade
-            if manutencao:
-                equipamento.manutencao = manutencao
-            db.commit()
-            print("Equipamento atualizado com sucesso!")
+            if equipamento.quantidade > 0:
+                print(f"Equipamento '{equipamento.nome}' disponível: {equipamento.quantidade} unidade(s) disponível(eis).")
+            else:
+                print(f"Equipamento '{equipamento.nome}' está indisponível no momento.")
         else:
             print("Equipamento não encontrado.")
     except Exception as e:
-        print(f"Erro ao editar equipamento: {e}")
+        print(f"Erro ao consultar equipamento: {e}")
+
 
 def excluir_equipamento(db: Session, equipamento_id: int):
     try:
