@@ -18,6 +18,7 @@ def main():
         print("7. Verificar disponibilidade do equipamento")
         print("8. Disponibilidade do(a) instrutor(a)")
         print("9. Criar turma")
+#        print("10. Cadastrar equipamento")
         print("0. Sair")
         
         escolha = input("Escolha uma opção: ")
@@ -71,6 +72,12 @@ def main():
             instrutor_id = int(input("ID do instrutor: "))
             crud.criar_turma(db, nome, horario, instrutor_id)
 
+        #elif escolha == "10":
+#            nome = input("Nome do equipamento: ")   
+#            quantidade = int(input("Quantidade desse equipamento: "))  
+#            manutencao = input("Data da última manutenção feita no equipamento: ") 
+#            crud.cadastrar_equipamento(db, nome, quantidade, manutencao)  
+
         elif escolha == "0":
             print("Saindo...")
             break
@@ -78,7 +85,7 @@ def main():
         else:
             print("Opção inválida. Tente novamente.")
 
-    db.close()  # Fecha a sessão ao final
+    db.close()  # Fecha a sessão ao sair
 
 if __name__ == "__main__":
     main()
