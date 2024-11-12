@@ -11,6 +11,7 @@ class Aluno(Base):
     plano_id = Column(Integer, ForeignKey('planos.id'))
 
     plano = relationship("Plano", back_populates="alunos")
+    treinos = relationship("Treino", back_populates="aluno")
 
 # Entidade Instrutor
 class Instrutor(Base):
@@ -23,6 +24,7 @@ class Instrutor(Base):
 
     # Relacionamento com Turma (um instrutor pode ter várias turmas)
     turmas = relationship("Turma", back_populates="instrutor")
+    treinos = relationship("Treino", back_populates="instrutor")
 
 # Entidade Plano
 class Plano(Base):
@@ -55,3 +57,13 @@ class Turma(Base):
 
     # Relacionamento com Instrutor (uma turma tem um instrutor responsável)
     instrutor = relationship("Instrutor", back_populates="turmas")
+
+class Treino(Base):
+   __tablename__ = 'treinos'
+   id = Column(Integer, primary_key=True)
+   tipo = Column(String, nullable=False)  # Ex.: Membros Inferiores, Membros Superiores, 
+   aluno_id = Column(Integer, ForeignKey('alunos.id'))
+   instrutor_id = Column(Integer, ForeignKey('instrutores.id'))
+   
+   aluno = relationship("Aluno", back_populates="treinos")
+   instrutor = relationship("Instrutor", back_populates="treinos")

@@ -1,6 +1,6 @@
 # crud.py
 from sqlalchemy.orm import Session
-from entidades import Aluno, Instrutor, Plano, Equipamento, Turma
+from entidades import Aluno, Instrutor, Plano, Equipamento, Turma, Treino
 
 # CRUD para Aluno
 def cadastrar_aluno(db: Session, nome: str, idade: int, plano_id: int):
@@ -145,3 +145,13 @@ def excluir_equipamento(db: Session, equipamento_id: int):
             print("Equipamento não encontrado.")
     except Exception as e:
         print(f"Erro ao excluir equipamento: {e}")
+
+def criar_treino(db: Session, tipo: str, aluno_id: int, instrutor_id: int):
+   try:
+       treino = Treino(tipo=tipo, aluno_id=aluno_id, instrutor_id=instrutor_id)
+       db.add(treino)
+       db.commit()
+       print("Treino criado com sucesso!")
+   except Exception as e:
+       db.rollback()
+       print(f"Erro ao criar treino: {e}")

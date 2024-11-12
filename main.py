@@ -18,7 +18,8 @@ def main():
         print("7. Verificar disponibilidade do equipamento")
         print("8. Disponibilidade do(a) instrutor(a)")
         print("9. Criar turma")
-#        print("10. Cadastrar equipamento")
+        print("10. Cadastrar equipamento")
+        print("11. Criar treino para aluno(a)")
         print("0. Sair")
         
         escolha = input("Escolha uma opção: ")
@@ -72,11 +73,33 @@ def main():
             instrutor_id = int(input("ID do instrutor: "))
             crud.criar_turma(db, nome, horario, instrutor_id)
 
-        #elif escolha == "10":
-#            nome = input("Nome do equipamento: ")   
-#            quantidade = int(input("Quantidade desse equipamento: "))  
-#            manutencao = input("Data da última manutenção feita no equipamento: ") 
-#            crud.cadastrar_equipamento(db, nome, quantidade, manutencao)  
+        elif escolha == "10":
+            nome = input("Nome do equipamento: ")   
+            quantidade = int(input("Quantidade desse equipamento: "))  
+            manutencao = input("Data da última manutenção feita no equipamento: ") 
+            crud.cadastrar_equipamento(db, nome, quantidade, manutencao)  
+        
+        elif escolha == "11":
+               print("Escolha o tipo de treino: \n")
+               print("1. Membros Inferiores")
+               print("2. Membros Superiores")
+               print("3. Cardio")
+               print("4. Flexibilidade")
+
+               tipo_escolha = input("Digite o número do tipo de treino desejado: ")
+               tipos_treino = {  
+                    
+                   "1": "Membros Inferiores",
+                   "2": "Membros Superiores",
+                   "3": "Cardio",
+                   "4": "Flexibilidade"
+                }
+    
+               tipo = tipos_treino.get(tipo_escolha, "Outro")
+               aluno_id = int(input("ID do(a) Aluno(a): "))
+               instrutor_id = int(input("ID do(a) Instrutor(a): "))
+               crud.criar_treino(db, tipo, aluno_id, instrutor_id)
+
 
         elif escolha == "0":
             print("Saindo...")
