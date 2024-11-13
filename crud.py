@@ -32,6 +32,16 @@ def editar_aluno(db: Session, aluno_id: int, nome: str = None, idade: int = None
     except Exception as e:
         print(f"Erro ao editar aluno: {e}")
 
+def criar_treino(db: Session, tipo: str, aluno_id: int, instrutor_id: int):
+   try:
+       treino = Treino(tipo=tipo, aluno_id=aluno_id, instrutor_id=instrutor_id)
+       db.add(treino)
+       db.commit()
+       print("Treino criado com sucesso!")
+   except Exception as e:
+       db.rollback()
+       print(f"Erro ao criar treino: {e}")
+
 # Cadastrar Instrutor
 def cadastrar_instrutor(db: Session, nome: str, especialidade: str, horario_trabalho: str):
     try:
@@ -43,7 +53,6 @@ def cadastrar_instrutor(db: Session, nome: str, especialidade: str, horario_trab
     except Exception as e:
         print(f"Erro ao cadastrar instrutor: {e}")
 
-# Em crud.py
 
 def consultar_disponibilidade_instrutor(db: Session, periodo: str):
     try:
@@ -58,7 +67,6 @@ def consultar_disponibilidade_instrutor(db: Session, periodo: str):
         print(f"Erro ao consultar disponibilidade de instrutores: {e}")
 
 
-# Gerenciar Planos (Criar, Editar, Remover)
 def cadastrar_plano(db: Session, tipo: str, preco: int):
     try:
         plano = Plano(tipo=tipo, preco=preco)
@@ -108,7 +116,7 @@ def criar_turma(db: Session, nome: str, horario: str, instrutor_id: int):
     except Exception as e:
         print(f"Erro ao criar turma: {e}")
 
-# Controle de Equipamentos (CRUD)
+# Controle de Equipamentos 
 def cadastrar_equipamento(db: Session, nome: str, quantidade: int, manutencao: str):
     try:
         equipamento = Equipamento(nome=nome, quantidade=quantidade, manutencao=manutencao)
@@ -117,8 +125,6 @@ def cadastrar_equipamento(db: Session, nome: str, quantidade: int, manutencao: s
         print("Equipamento cadastrado com sucesso!")
     except Exception as e:
         print(f"Erro ao cadastrar equipamento: {e}")
-
-# Em crud.py
 
 def consultar_equipamento(db: Session, nome_equipamento: str):
     try:
@@ -146,12 +152,24 @@ def excluir_equipamento(db: Session, equipamento_id: int):
     except Exception as e:
         print(f"Erro ao excluir equipamento: {e}")
 
-def criar_treino(db: Session, tipo: str, aluno_id: int, instrutor_id: int):
+# Consulta de turm pelo id
+def consultar_turma(db: Session, turma_id: int):
    try:
-       treino = Treino(tipo=tipo, aluno_id=aluno_id, instrutor_id=instrutor_id)
-       db.add(treino)
-       db.commit()
-       print("Treino criado com sucesso!")
+       turma = db.query(Turma).filter(Turma.id == turma_id).first()
+       if turma:
+           print(f"Turma ID: {turma.id}\n Nome: {turma.nome}\n Horário: {turma.horario}\n Instrutor ID: {turma.instrutor_id}")
+       else:
+           print("Turma não encontrada.")
    except Exception as e:
-       db.rollback()
-       print(f"Erro ao criar treino: {e}")
+       print(f"Erro ao consultar turma: {e}")
+
+# Consulta de um alunoo específico pelo ID
+def consultar_aluno(db: Session, aluno_id: int):
+   try:
+       aluno = db.query(Aluno).filter(Aluno.id == aluno_id).first()
+       if aluno:
+           print(f"Aluno ID: {aluno.id}\n Nome: {aluno.nome}\n Idade: {aluno.idade}\n Plano ID: {aluno.plano_id}")
+       else:
+           print("Aluno não encontrado.")
+   except Exception as e:
+       print(f"Erro ao consultar aluno: {e}")
