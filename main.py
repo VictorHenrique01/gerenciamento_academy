@@ -40,10 +40,6 @@ def main():
 
         elif escolha == "3":
                print("Escolha o tipo de treino: \n")
-               print("1. Membros Inferiores")
-               print("2. Membros Superiores")
-               print("3. Cardio")
-               print("4. Flexibilidade")
 
                tipos_treino = {  
                     
@@ -64,9 +60,11 @@ def main():
                    print(f"{chave}. {valor}")
 
                tipo_escolha = input("Digite o número do tipo de treino desejado: ")
-    
                tipo = tipos_treino.get(tipo_escolha, "Outro")
-               aluno_id = int(input("ID do(a) Aluno(a): "))
+
+               crud.mostrar_equipamentos_sugeridos(tipo)
+            
+               aluno_id = int(input("\nID do(a) Aluno(a): "))
                instrutor_id = int(input("ID do(a) Instrutor(a): "))
                crud.criar_treino(db, tipo, aluno_id, instrutor_id)
 

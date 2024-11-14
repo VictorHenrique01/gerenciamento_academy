@@ -42,6 +42,31 @@ def criar_treino(db: Session, tipo: str, aluno_id: int, instrutor_id: int):
        db.rollback()
        print(f"Erro ao criar treino: {e}")
 
+#----------------------------------------------------------------------------------------------------
+#Criei uma lista de equipamentos necessárioss para cd tipo de treino que o usuário escolher lá no term
+
+def mostrar_equipamentos_sugeridos(tipo):
+   equipamentos_por_treino = {
+       "Membros Inferiores": ["Leg Press", "Cadeira Extensora", "Cadeira Flexora"],
+       "Membros Superiores": ["Supino", "Pulley", "Máquina de Peito"],
+       "Costas e Bíceps": ["Remada Baixa", "Halteres", "Pulley"],
+       "Peito e Tríceps": ["Supino", "Polia", "Barras"],
+       "Quadríceps": ["Cadeira Extensora", "Barra Guiada Smith", "Halteres", "Bancos para Musculação"],
+       "Perna Completo": ["Leg Press", "Cadeira Flexora", "Cadeira Abdutora"],
+       "Ombros e Abdômen": ["Abdominal Máquina", "Halteres", "Abdominal Máquina"],
+       "Corpo Inteiro (Full Body)": ["Anilhas", "Halteres", "Mesa Posterior", "Leg Press 45 graus", "Bancos para Musculação"],
+       "Cardio": ["Esteira", "Bicicleta Ergométrica"],
+       "Flexibilidade": ["Colchonetes para Alongamento", "Bola de Pilates", "Elásticos de Resistência"]
+   }
+   equipamentos = equipamentos_por_treino.get(tipo, [])
+   if equipamentos:
+       print("-------------------------------------------------------------------------")
+       print(f"Equipamentos sugeridos para treino de {tipo}:")
+       for equipamento in equipamentos:
+           print(f"- {equipamento}")
+   else:
+       print("Nenhum equipamento sugerido para este tipo de treino.")
+
 # Cadastrar Instrutor
 def cadastrar_instrutor(db: Session, nome: str, especialidade: str, horario_trabalho: str):
     try:
