@@ -52,8 +52,8 @@ def mostrar_equipamentos_sugeridos(tipo):
        "Costas e Bíceps": ["Remada Baixa", "Halteres", "Pulley"],
        "Peito e Tríceps": ["Supino", "Polia", "Barras"],
        "Quadríceps": ["Cadeira Extensora", "Barra Guiada Smith", "Halteres", "Bancos para Musculação"],
-       "Perna Completo": ["Leg Press", "Cadeira Flexora", "Cadeira Abdutora"],
-       "Ombros e Abdômen": ["Abdominal Máquina", "Halteres", "Abdominal Máquina"],
+       "Pernas Completo": ["Leg Press", "Cadeira Flexora", "Cadeira Abdutora"],
+       "Ombros e Abdômen": ["Abdominal Máquina", "Halteres", "Máquina Ombro"],
        "Corpo Inteiro (Full Body)": ["Anilhas", "Halteres", "Mesa Posterior", "Leg Press 45 graus", "Bancos para Musculação"],
        "Cardio": ["Esteira", "Bicicleta Ergométrica"],
        "Flexibilidade": ["Colchonetes para Alongamento", "Bola de Pilates", "Elásticos de Resistência"]
@@ -83,13 +83,13 @@ def consultar_disponibilidade_instrutor(db: Session, periodo: str):
     try:
         instrutores = db.query(Instrutor).filter(Instrutor.horario_trabalho == periodo).all()
         if instrutores:
-            print(f"Instrutores disponíveis no período {periodo}:")
+            print(f"Instrutores(as) disponíveis no período {periodo}:")
             for instrutor in instrutores:
-                print(f"- {instrutor.nome} (Especialidade: {instrutor.especialidade})")
+                print(f"- {instrutor.nome} (Especialidade: {instrutor.especialidade} | ID do instrutor(a): {instrutor.id})")
         else:
-            print(f"Nenhum instrutor disponível no período {periodo}.")
+            print(f"Nenhum(a) instrutor(a) disponível no período {periodo}.")
     except Exception as e:
-        print(f"Erro ao consultar disponibilidade de instrutores: {e}")
+        print(f"Erro ao consultar disponibilidade de instrutores(as): {e}")
 
 
 def cadastrar_plano(db: Session, tipo: str, preco: int):
@@ -198,3 +198,15 @@ def consultar_aluno(db: Session, aluno_id: int):
            print("Aluno não encontrado.")
    except Exception as e:
        print(f"Erro ao consultar aluno: {e}")
+
+def consultar_tipo_treino(db: Session, nome_treino: str):
+    try:
+        treinos = db.query(Treino).filter(Treino.tipo == nome_treino).all()
+        if treinos:
+            print(f" Tipo de treino: {nome_treino}")
+            for treino in treinos:
+                print(f"* {treino.tipo} -- Para ID Aluno: {treino.aluno_id} | Criado por ID Instrutor: {treino.instrutor_id}")
+        else:
+            print(f"Nenhum treino existente na academia para o membro do corpo: {nome_treino}.")
+    except Exception as e:
+        print(f"Erro ao consultar tipo de treino: {e}")

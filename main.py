@@ -8,7 +8,8 @@ def main():
     db = SessionLocal()  # Cria uma sessão para o banco de dados
     
     while True:
-        print("\nBem-vindo ao Sistema de Gerenciamento de Academia")
+        print("\n|------------------------- ⚒ Bem-vindo ao Sistema de Gerenciamento de Academia ⚒ -------------------------|\n")
+        print("0. Para sair do sistema")
         print("1. Cadastrar Aluno(a)")
         print("2. Editar Dados do Aluno(a)")
         print("3. Criar treino para aluno(a)")
@@ -22,6 +23,7 @@ def main():
         print("11. Criar turma")
         print("12. Consultar turma")
         print("13. Consultar Aluno(a)")
+        print("14. Consultar tipo de treino")
         
         escolha = input("Escolha uma opção: ")
 
@@ -48,7 +50,7 @@ def main():
                    "3": "Costas e Bíceps",
                    "4": "Peito e Tríceps",
                    "5": "Quadríceps",
-                   "6": "Pernas completo",
+                   "6": "Pernas Completo",
                    "7": "Ombros e Abdômen",
                    "8": "Corpo Inteiro (Full Body)",
                    "9": "Cardio",
@@ -118,7 +120,10 @@ def main():
         elif escolha == "13":
             aluno_id = int(input("ID do aluno para consulta: "))
             crud.consultar_aluno(db, aluno_id)
-
+        
+        elif escolha == "14":
+            nome_treino = input("Qual treino deseja consultar? (Insira o nome do tipo de treino criado): ")
+            crud.consultar_tipo_treino(db, nome_treino)
 
         elif escolha == "0":
             print("Saindo...")
