@@ -1,14 +1,31 @@
-#Arquivo principal do flask
+# Arquivo principal do FastAPI
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database import engine, SessionLocal, Base
 import crud
 # Importando as entidades para criar as tabelas no banco de dados
 from entidades import Aluno, Instrutor, Plano, Equipamento, Turma, Treino
+from fastapi.middleware.cors import CORSMiddleware
+
 # Criando o banco de dados e tabelas
 Base.metadata.create_all(bind=engine)
 # Inicializando o FastAPI
 app = FastAPI(title="Sistema de Gerenciamento de Academia", version="1.0.0")
+# Adicionando o middleware CORS
+app.add_middleware(
+   CORSMiddleware,
+   allow_origins=["*"],  # Permite todas as origens
+   allow_credentials=True,
+   allow_methods=["*"],  # Permite todos os métodos HTTP
+   allow_headers=["*"],  # Permite todos os cabeçalhos
+)
+
+from pydantic import BaseModel
+
+class AlunoCreate(BaseModel):
+   nome: str
+   idade: int
+   plano_id: int
 # Dependência para criar uma sessão de banco de dados por requisição
 def get_db():
    db = SessionLocal()
@@ -17,7 +34,7 @@ def get_db():
    finally:
        db.close()
 # Endpoints para Aluno
-@app.post("/alunos/", response_description="Cadastrar um aluno")
+@app.post("/alunos/", status_code=201)
 def cadastrar_aluno(nome: str, idade: int, plano_id: int, db: Session = Depends(get_db)):
    crud.cadastrar_aluno(db, nome, idade, plano_id)
    return {"mensagem": "Aluno cadastrado com sucesso!"}

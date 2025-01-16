@@ -14,7 +14,7 @@ formAluno.addEventListener("submit", async (event) => {
 
    try {
        //requisição POST
-       const response = await fetch("http://127.0.0.1:8000/alunos", {
+       const response = await fetch("http://127.0.0.1:8000/alunos/", {
            method: "POST",
            headers: {
                "Content-Type": "application/json"
@@ -27,6 +27,7 @@ formAluno.addEventListener("submit", async (event) => {
        } else {
            const error = await response.json();
            alert(`Erro: ${error.detail}`);
+           console.log("Dados:", aluno);
        }
    } catch (error) {
        console.error("Erro ao cadastrar aluno:", error);
