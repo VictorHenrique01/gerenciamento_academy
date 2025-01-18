@@ -3,31 +3,79 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-        <title>Gerenciamento de Academia</title>
+        <title>Page Aluno</title>
         <link rel="stylesheet" href="/frontend/css/style.css">
     </head>
-
 <body>
     <header>
-        <h1>⚒ Gerenciamento de Academia ⚒</h1>
+        <h1>⚒ Gerenciamento da Academia ⚒</h1>
     </header>
 
     <main>
-        <section id="cadastro">
-            <h2>Cadastrar Aluno</h2>
-                <form id="formAluno">
+    <!-- Navegação principal -->
+        <nav class="form-nav">
+            <button class="nav-button" onclick="exibirFormulario('cadastro')">Cadastrar Aluno</button>
+    <!--        <button class="nav-button" onclick="exibirFormulario('editar')">Editar Aluno</button>  -->
+            <button class="nav-button" onclick="exibirFormulario('consultar')">Consultar Aluno</button>
+        </nav>
+    <!-- Formulário de Cadastro -->
+        <section id="cadastro" class="formulario ativo">
+        <h2>Cadastrar Aluno</h2>
+            <form id="formAluno">
+                <div class="form-group">
                     <label for="nome">Nome:</label>
-                    <input type="text" id="nome" name="nome" required>
-
+                    <input type="text" id="nome" name="nome" placeholder="Digite o nome do aluno" required>
+                </div>
+                <div class="form-group">
                     <label for="idade">Idade:</label>
-                    <input type="number" id="idade" name="idade" required>
-
+                    <input type="number" id="idade" name="idade" placeholder="Digite a idade" required>
+                </div>
+                <div class="form-group">
                     <label for="plano">Plano ID:</label>
-                    <input type="number" id="plano" name="plano" required>
-                    
-                    <button type="submit">Cadastrar</button>
-                </form>
+                    <input type="number" id="plano" name="plano" placeholder="Digite o ID do plano" required>
+                </div>
+            <button class="submit-button" type="submit">Cadastrar</button>
+            </form>
+        </section>
+
+    <!-- Formulário de Edição -->
+<!--           <section id="editar" class="formulario">
+            
+     <h2>Editar Dados do Aluno</h2>
+            <form id="formEditarAluno">
+                <div class="form-group">
+                    <label for="idAluno">ID do Aluno:</label>
+                    <input type="number" id="idAluno" name="idAluno" placeholder="Digite o ID do aluno" required>
+                </div>
+                <div class="form-group">
+                    <label for="novoNome">Novo Nome do Aluno (ou Enter para manter):</label>
+                    <input type="text" id="novoNome" name="novoNome" placeholder="Digite o novo nome">
+                </div>
+                <div class="form-group">
+                    <label for="novaIdade">Nova Idade do Aluno (ou Enter para manter):</label>
+                    <input type="number" id="novaIdade" name="novaIdade" placeholder="Digite a nova idade">
+                </div>
+                <div class="form-group">
+                    <label for="novoPlano">Novo ID do Plano (ou Enter para manter):</label>
+                    <input type="number" id="novoPlano" name="novoPlano" placeholder="Digite o novo ID do plano">
+                </div>
+                <button class="submit-button" type="submit">Salvar Alterações</button>
+            </form>
+        </section> -->  
+
+    <!-- Formulário de Consulta -->
+        <section id="consultar" class="formulario">
+        <h2>Consultar Aluno</h2>
+            <form id="formConsultarAluno">
+                <div class="form-group">
+                    <label for="consultaIdAluno">ID do Aluno:</label>
+                    <input type="number" id="consultaIdAluno" name="consultaIdAluno" placeholder="Digite o ID do aluno" required>
+                </div>
+            <button class="submit-button" type="submit">Consultar</button>
+            </form>
+            <div id="resultadoConsulta" class="resultado">
+            <!-- Resultados da consulta serão exibidos aqui -->
+            </div>
         </section>
     </main>
     <script src="/frontend/js/script.js"></script>
