@@ -50,7 +50,7 @@ h2 {
    text-align: center;
    color: #333;
 }
-/* Grupos de formulário */
+/* Formulário */
 .form-group {
    margin-bottom: 15px;
 }
@@ -70,7 +70,7 @@ input:focus {
    border-color: #007bff;
    outline: none;
 }
-/* Botões de formulário */
+/* Botão form */
 .submit-button {
    width: 100%;
    padding: 10px;
@@ -85,6 +85,7 @@ input:focus {
 .submit-button:hover {
    background-color: #4cae4c;
 }
+
 /* Resultado da consulta */
 .resultado {
    margin-top: 20px;

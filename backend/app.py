@@ -17,7 +17,6 @@ app.add_middleware(
    allow_methods=["*"],
    allow_headers=["*"],
 )
-
 # Modelo Pydantic
 class AlunoCreate(BaseModel):
    nome: str
@@ -30,20 +29,19 @@ def get_db():
        yield db
    finally:
        db.close()
-# Endpoint ajustado
+# Endpoint para cadastrar aluno
 @app.post("/alunos/", status_code=201)
 def cadastrar_aluno(aluno: AlunoCreate, db: Session = Depends(get_db)):
    crud.cadastrar_aluno(db, aluno.nome, aluno.idade, aluno.plano_id)
    return {"mensagem": "Aluno cadastrado com sucesso!"}
 
-@app.put("/alunos/{aluno_id}", response_description="Editar um aluno")
-def editar_aluno(aluno_id: int, nome: str = None, idade: int = None, plano_id: int = None, db: Session = Depends(get_db)):
-   crud.editar_aluno(db, aluno_id, nome, idade, plano_id)
-   return {"mensagem": "Dados do aluno atualizados com sucesso!"}
-
+# Endpoint para consultar aluno por ID
 @app.get("/alunos/{aluno_id}", response_description="Consultar um aluno pelo ID")
 def consultar_aluno(aluno_id: int, db: Session = Depends(get_db)):
-   return crud.consultar_aluno(db, aluno_id)
+      aluno = crud.consultar_aluno(db, aluno_id)
+      if not aluno:
+          raise HTTPException(status_code=404, detail="Aluno não encontrado.")
+      return aluno
 
 # Endpoints para Treino
 @app.post("/treinos/", response_description="Criar um treino")

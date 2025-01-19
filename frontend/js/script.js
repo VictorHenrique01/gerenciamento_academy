@@ -1,6 +1,5 @@
 // Seleciona os formulários
 const formAluno = document.getElementById("formAluno");
-const formEditarAluno = document.getElementById("formEditarAluno");
 const formConsultarAluno = document.getElementById("formConsultarAluno");
 // Função para exibir o formulário correto
 function exibirFormulario(formularioId) {
@@ -19,19 +18,19 @@ formAluno.addEventListener("submit", async (event) => {
    const aluno = {
        nome: nome,
        idade: parseInt(idade),
-       plano_id: parseInt(planoId)
+       plano_id: parseInt(planoId),
    };
    try {
-       const response = await fetch("http://127.0.0.1:8000/alunos", {
+       const response = await fetch("http://127.0.0.1:8000/alunos/", {
            method: "POST",
            headers: {
-               "Content-Type": "application/json"
+               "Content-Type": "application/json",
            },
-           body: JSON.stringify(aluno)
+           body: JSON.stringify(aluno),
        });
        if (response.ok) {
            alert("Aluno cadastrado com sucesso!");
-           formAluno.reset(); // Limpa o form
+           formAluno.reset(); // Limpa o formulário
        } else {
            const error = await response.json();
            alert(`Erro: ${error.detail}`);
@@ -41,39 +40,41 @@ formAluno.addEventListener("submit", async (event) => {
        alert("Erro ao cadastrar aluno. Verifique o console para mais detalhes.");
    }
 });
-
-
-
 // Consulta de Aluno
-formConsultarAluno.addEventListener("submit", async (event) => {
-   event.preventDefault(); // Evita o reload da página
-   const consultaIdAluno = document.getElementById("consultaIdAluno").value;
-   try {
-       const response = await fetch(`http://127.0.0.1:8000/alunos/${consultaIdAluno}`, {
-           method: "GET",
-           headers: {
-               "Content-Type": "application/json"
-           }
-       });
-       if (response.ok) {
-           const aluno = await response.json();
-           const resultadoDiv = document.getElementById("resultadoConsulta");
-           resultadoDiv.innerHTML = `
-            <p><strong>ID:</strong> ${aluno.id}</p>
-            <p><strong>Nome:</strong> ${aluno.nome}</p>
-            <p><strong>Idade:</strong> ${aluno.idade}</p>
-            <p><strong>Plano ID:</strong> ${aluno.plano_id}</p>
-           `;
-       } else {
-           const error = await response.json();
-           alert(`Erro: ${error.detail}`);
-       }
-   } catch (error) {
-       console.error("Erro ao consultar aluno:", error);
-       alert("Erro ao consultar aluno. Verifique o console para mais detalhes.");
-   }
-});
-
+// Evento para o formulário de consulta
+document.getElementById("formConsultarAluno").addEventListener("submit", async function (event) {
+    event.preventDefault(); // Impede o comportamento padrão do formulário
+    // Captura o valor do campo de entrada do ID
+    const alunoId = document.getElementById("consultaIdAluno").value;
+    // Verifica se o ID foi preenchido
+    if (!alunoId) {
+        alert("Por favor, insira o ID do aluno.");
+        return;
+    }
+    try {
+        // Faz a requisição para o backend
+        const response = await fetch(`http://127.0.0.1:8000/alunos/${alunoId}`);
+        // Verifica se a resposta é válida
+        if (!response.ok) {
+            throw new Error("Aluno não encontrado ou erro na consulta.");
+        }
+        // Converte a resposta para JSON
+        const aluno = await response.json();
+        // Exibe o resultado no HTML
+        const resultadoDiv = document.getElementById("resultadoConsulta");
+        resultadoDiv.innerHTML = `
+        <h3>Aluno Encontrado</h3>
+        <p><strong>ID:</strong> ${aluno.id}</p>
+        <p><strong>Nome:</strong> ${aluno.nome}</p>
+        <p><strong>Idade:</strong> ${aluno.idade}</p>
+        <p><strong>Plano:</strong> ${aluno.plano_id}</p>
+        `;
+    } catch (error) {
+        // Trata erros e exibe uma mensagem para o usuário
+        console.error(error.message);
+        alert("Erro ao consultar aluno. Verifique o ID e tente novamente.");
+    }
+ });
 
 // Edição de Aluno
 //formEditarAluno.addEventListener("submit", async (event) => {
