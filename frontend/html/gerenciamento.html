@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerenciamento de Instrutor, Turma e Treino</title>
+<link rel="stylesheet" href="/frontend/css/gerenciamento.css">
+</head>
+<body>
+<header>
+<h1>Sistema de Gerenciamento - Acesso do Instrutor</h1>
+
+</header>
+<main>
+<section id="gerenciamento" class="formulario">
+<h2>Gerenciamento para Instrutor com as suas turmas e treinos</h2>
+<div class="menu-gerenciamento">
+<button onclick="mostrarSecao('instrutor')">Instrutores</button>
+<button onclick="mostrarSecao('turma')">Turmas</button>
+<button onclick="mostrarSecao('treino')">Treinos</button>
+</div>
+<!-- Cadastro de Instrutores -->
+<div id="instrutor" class="secao-gerenciamento">
+<h3>Cadastro de Instrutores</h3>
+<form id="formCadastroInstrutor">
+<label for="nomeInstrutor">Nome:</label>
+<input type="text" id="nomeInstrutor" name="nomeInstrutor" required>
+<label for="especialidade">Especialidade:</label>
+<input type="text" id="especialidade" name="especialidade" required>
+<label for="periodo">Período:</label>
+<select id="periodo" name="periodo">
+<option value="manhã">Manhã</option>
+<option value="tarde">Tarde</option>
+<option value="noite">Noite</option>
+</select>
+<button type="submit">Cadastrar Instrutor</button>
+</form>
+</div>
+<!-- Cadastro de Turmas -->
+<div id="turma" class="secao-gerenciamento">
+<h3>Cadastro de Turmas</h3>
+<form id="formCadastroTurma">
+<label for="nomeTurma">Nome da Turma:</label>
+<input type="text" id="nomeTurma" name="nomeTurma" required>
+<label for="horario">Horário da Aula:</label>
+<input type="time" id="horario" name="horario" required>
+<label for="instrutorTurma">Instrutor Responsável:</label>
+<select id="instrutorTurma" name="instrutorTurma">
+<!-- Opções preenchidas dinamicamente -->
+</select>
+<button type="submit">Cadastrar Turma</button>
+</form>
+</div>
+<!-- Cadastro de Treinos -->
+<div id="treino" class="secao-gerenciamento">
+<h3>Cadastro de Treinos</h3>
+<form id="formCadastroTreino">
+<label for="tipoTreino">Tipo de Treino:</label>
+<select id="tipoTreino" name="tipoTreino">
+<option value="1">Membros Inferiores</option>
+<option value="2">Membros Superiores</option>
+<option value="3">Costas e Bíceps</option>
+<option value="4">Peito e Tríceps</option>
+<option value="5">Quadríceps</option>
+<option value="6">Pernas Completo</option>
+<option value="7">Ombros e Abdômen</option>
+<option value="8">Corpo Inteiro</option>
+<option value="9">Cardio</option>
+<option value="10">Flexibilidade</option>
+</select>
+<label for="idAluno">ID do Aluno:</label>
+<input type="number" id="idAluno" name="idAluno" required>
+<label for="idInstrutorTreino">ID do Instrutor:</label>
+<input type="number" id="idInstrutorTreino" name="idInstrutorTreino" required>
+<button type="submit">Cadastrar Treino</button>
+</form>
+</div>
+</section>
+</main>
+<script src="/frontend/js/gerenciamento.js"></script>
+</body>
+</html>
