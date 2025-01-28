@@ -1,6 +1,8 @@
 // Seleciona os formulários
 const formAluno = document.getElementById("formAluno");
+const formPlano = document.getElementById("formPlano");
 const formConsultarAluno = document.getElementById("formConsultarAluno");
+const formConsultarPlano = document.getElementById("formConsultarPlano");
 // Função para exibir o formulário correto
 function exibirFormulario(formularioId) {
    const formularios = document.querySelectorAll(".formulario");
@@ -11,33 +13,24 @@ function exibirFormulario(formularioId) {
 }
 // Cadastro de Aluno
 formAluno.addEventListener("submit", async (event) => {
-   event.preventDefault(); // Evita o reload da página
-   const nome = document.getElementById("nome").value;
-   const idade = document.getElementById("idade").value;
-   const planoId = document.getElementById("plano").value;
+   event.preventDefault();
    const aluno = {
-       nome: nome,
-       idade: parseInt(idade),
-       plano_id: parseInt(planoId),
+
+    nome: document.getElementById("nome").value,
+    idade: parseInt(document.getElementById("idade").value),
+    plano_id: parseInt(document.getElementById("plano").value),
+
    };
    try {
        const response = await fetch("http://127.0.0.1:8000/alunos/", {
            method: "POST",
-           headers: {
-               "Content-Type": "application/json",
-           },
+           headers: { "Content-Type": "application/json" },
            body: JSON.stringify(aluno),
        });
-       if (response.ok) {
-           alert("Aluno cadastrado com sucesso!");
-           formAluno.reset(); // Limpa o formulário
-       } else {
-           const error = await response.json();
-           alert(`Erro: ${error.detail}`);
-       }
+       alert(response.ok ? "Aluno cadastrado com sucesso!" : "Erro ao cadastrar aluno.");
+       formAluno.reset();
    } catch (error) {
-       console.error("Erro ao cadastrar aluno:", error);
-       alert("Erro ao cadastrar aluno. Verifique o console para mais detalhes.");
+       alert("Erro ao cadastrar aluno.");
    }
 });
 // Consulta de Aluno
@@ -76,34 +69,58 @@ document.getElementById("formConsultarAluno").addEventListener("submit", async f
     }
  });
 
-// Edição de Aluno
-//formEditarAluno.addEventListener("submit", async (event) => {
-//   event.preventDefault(); // Evita o reload da página
-//   const idAluno = document.getElementById("idAluno").value;
-//   const novoNome = document.getElementById("novoNome").value;
-//   const novaIdade = document.getElementById("novaIdade").value;
-//   const novoPlano = document.getElementById("novoPlano").value;
-//   const dadosAtualizados = {};
-//   if (novoNome) dadosAtualizados.nome = novoNome;
-//   if (novaIdade) dadosAtualizados.idade = parseInt(novaIdade);
-//   if (novoPlano) dadosAtualizados.plano_id = parseInt(novoPlano);
-//   try {
-//       const response = await fetch(`http://127.0.0.1:8000/alunos/${idAluno}`, {
-//           method: "PUT",
-//         headers: {
-//              "Content-Type": "application/json"
-//           },
-//           body: JSON.stringify(dadosAtualizados)
-//       });
-//       if (response.ok) {
-//           alert("Dados do aluno atualizados com sucesso!");
-//           formEditarAluno.reset(); // Limpa o formulário
-//       } else {
-//         const error = await response.json();
-//         alert(`Erro: ${error.detail}`);
-//     }
-// } catch (error) {
-//     console.error("Erro ao atualizar aluno:", error);
-//     alert("Erro ao atualizar aluno. Verifique o console para mais detalhes.");
-// }
-//});
+// Mapeia os valores dos planos
+const valoresPlanos = {
+    mensal: 60.00,
+    trimestral: 200.00,
+    semestral: 320.00,
+    anual: 630.00
+ };
+ // Atualiza o valor do plano ao selecionar no menu suspenso
+ document.getElementById("nomePlano").addEventListener("change", function () {
+    const valorPlano = valoresPlanos[this.value]; // Obtém o valor do plano selecionado
+    document.getElementById("valorPlano").value = `R$ ${valorPlano.toFixed(2)}`; // Atualiza o campo de valor
+ });
+ // Define o valor inicial ao carregar a página
+ document.addEventListener("DOMContentLoaded", function () {
+    const planoInicial = document.getElementById("nomePlano").value;
+    document.getElementById("valorPlano").value = `R$ ${valoresPlanos[planoInicial].toFixed(2)}`;
+ });
+ // Cadastro de Plano atualizado para enviar o valor correto
+ formPlano.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const nomePlano = document.getElementById("nomePlano").value;
+    const valorPlano = valoresPlanos[nomePlano]; // Obtém o valor numérico correto
+    const plano = { nome: nomePlano, valor: valorPlano };
+    try {
+        const response = await fetch("http://127.0.0.1:8000/planos/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(plano),
+        });
+        alert(response.ok ? "Plano cadastrado com sucesso!" : "Erro ao cadastrar plano.");
+        formPlano.reset();
+    } catch (error) {
+        alert("Erro ao cadastrar plano.");
+    }
+ });
+ 
+ // Consulta de Plano
+ formConsultarPlano.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const planoId = document.getElementById("consultaIdPlano").value;
+    try {
+        const response = await fetch(`http://127.0.0.1:8000/planos/${planoId}`);
+        if (!response.ok) throw new Error("Plano não encontrado.");
+        const plano = await response.json();
+        document.getElementById("resultadoConsultaPlano").innerHTML = `
+        <h3>Plano Encontrado</h3>
+        <p><strong>ID:</strong> ${plano.id}</p>
+        <p><strong>Nome:</strong> ${plano.nome}</p>
+        <p><strong>Valor:</strong> R$ ${plano.valor.toFixed(2)}</p>
+        `;
+    } catch (error) {
+        alert("Erro ao consultar plano.");
+    }
+ });
+

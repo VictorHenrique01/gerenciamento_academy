@@ -5,12 +5,12 @@ function mostrarSecao(secaoId) {
     const secaoSelecionada = document.getElementById(secaoId);
     secaoSelecionada.classList.add('ativa');
  }
- // Exemplo de envio de dados (substitua pelos endpoints reais)
+ // Exemplo de envio de dados 
  document.getElementById("formCadastroInstrutor").addEventListener("submit", function (e) {
     e.preventDefault();
     const nome = document.getElementById("nomeInstrutor").value;
     const especialidade = document.getElementById("especialidade").value;
-    // Faça a requisição para o backend
+    // requisiçãop
     fetch("http://127.0.0.1:8000/instrutores", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
