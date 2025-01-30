@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adminstração de Equipamentos</title>
+    <link rel="stylesheet" href="/frontend/css/administrativo.css">
+</head>
+<body>
+
+    <header>
+        <h1>⚒ Gerenciamento de Equipamentos ⚒</h1>
+    </header>
+
+    <main>
+        <nav class="form-nav">
+            <button class="nav-button" onclick="exibirFormulario('cadastroEquipamento')">Registrar Equipamento</button>
+            <button class="nav-button" onclick="exibirFormulario('consultarEquipamento')">Consultar Equipamento</button>
+        </nav>
+        <section id="cadastroEquipamento" class="formulario ativo">
+            <h2>Registrar Equipamento</h2>
+            <form id="formEquipamento">
+                <div class="form-group">
+                    <label for="nome">Nome do Equipamento:</label>
+                    <input type="text" id="nome" name="nome" placeholder="Digite o nome do equipamento que deseja registrar" required>
+                </div>
+                <div class="form-group">
+                    <label for="quantidade">Quantos equipamentos desse estão disponíveis?</label>
+                    <input type="number" id="quantidade" name="quantidade" placeholder="Digite a quantidade disponível para o equipamento sendo registrado" required>
+                </div>
+                <div class="form-group">
+                    <label for="manutencao">Insira a data da última manutenção feita no equipamento:</label>
+                    <input type="date" id="manutencao" name="manutencao" placeholder="" required>
+                </div>
+                <button class="submit-button" type="submit">Registrar</button>
+            </form>
+        </section>
+
+        <section id="consultarEquipamento" class="formulario">
+            <h2>Consultar Equipamento</h2>
+            <form id="formConsultarEquipamento">
+                <div class="form-group">
+                    <label for="consultaNomeEquipamento">Insira o nome do equipamento que deseja consultar:</label>
+                    <input type="number" id="consultaNomeEquipamento" name="consultaNomeEquipamento" placeholder="Digite o nome que foi registrado para o equipamento" required>
+                </div>
+                <button class="submit-button" type="submit">Consultar</button>
+            </form>
+            <div id="resultadoConsultaEquipamento" class="resultado"></div>
+        </section>
+    </main>
+    <script src="/frontend/js/administrativo.js"></script>
+
+    
+</body>
+</html>
