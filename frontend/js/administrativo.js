@@ -25,7 +25,7 @@ async function consultarPlanos() {
             planos.forEach(plano => {
                 const planoDiv = document.createElement("div");
                 planoDiv.classList.add("plano-item");
-                planoDiv.innerHTML = `<strong>Plano:</strong> ${plano.tipo} - <strong>Preço:</strong> R$ ${plano.preco}`;
+                planoDiv.innerHTML = `<strong>Plano ID: ${plano.id} | <strong>Plano:</strong> ${plano.tipo} - <strong>Preço:</strong> R$ ${plano.preco}`;
                 resultadoConsultaPlano.appendChild(planoDiv);
             });
         }
@@ -95,7 +95,7 @@ if (formConsultarEquipamento) {
             if (data && data.nome) {
                 resultadoDiv.innerHTML = `
                     <p><strong>Nome:</strong> ${data.nome}</p>
-                    <p><strong>Quantidade:</strong> ${data.quantidade}</p>
+                    <p><strong>Quantidade de ${data.nome} na academia:</strong> ${data.quantidade}</p>
                     <p><strong>Última manutenção feita:</strong> ${data.manutencao}</p>
                 `;
             } else {

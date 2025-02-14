@@ -38,19 +38,15 @@ def cadastrar_aluno(aluno: AlunoCreate, db: Session = Depends(get_db)):
    crud.cadastrar_aluno(db, aluno.nome, aluno.idade, aluno.plano_id)
    return {"mensagem": "Aluno cadastrado com sucesso!"}
 
-# Endpoint para consultar aluno por ID
-@app.get("/alunos/{aluno_id}", response_description="Consultar um aluno pelo ID")
-def consultar_aluno(aluno_id: int, db: Session = Depends(get_db)):
-      aluno = crud.consultar_aluno(db, aluno_id)
-      if not aluno:
-          raise HTTPException(status_code=404, detail="Aluno não encontrado.")
-      return aluno
+# Endpoint para consultar aluno pelo nome
+@app.get("/alunos", response_description="Consultar um aluno pelo nome")
+def consultar_aluno(nome: str, db: Session = Depends(get_db)):
+    aluno = crud.consultar_aluno_por_nome(db, nome)
+    if not aluno:
+        raise HTTPException(status_code=404, detail="Aluno não encontrado.")
+    return aluno
 
 # Endpoints para Treino
-@app.post("/treinos/", response_description="Criar um treino")
-def criar_treino(tipo: str, aluno_id: int, instrutor_id: int, db: Session = Depends(get_db)):
-   crud.criar_treino(db, tipo, aluno_id, instrutor_id)
-   return {"mensagem": "Treino criado com sucesso!"}
 
 @app.get("/treinos/{nome_treino}", response_description="Consultar treinos por tipo")
 def consultar_tipo_treino(nome_treino: str, db: Session = Depends(get_db)):
@@ -76,11 +72,7 @@ def excluir_equipamento(equipamento_id: int, db: Session = Depends(get_db)):
    crud.excluir_equipamento(db, equipamento_id)
    return {"mensagem": "Equipamento excluído com sucesso!"}
 
-# Endpoints para Instrutores
-@app.post("/instrutores/", response_description="Cadastrar um instrutor")
-def cadastrar_instrutor(nome: str, especialidade: str, horario_trabalho: str, db: Session = Depends(get_db)):
-   crud.cadastrar_instrutor(db, nome, especialidade, horario_trabalho)
-   return {"mensagem": "Instrutor cadastrado com sucesso!"}
+
 
 @app.get("/instrutores/{periodo}", response_description="Consultar disponibilidade de instrutores")
 def consultar_disponibilidade_instrutor(periodo: str, db: Session = Depends(get_db)):
@@ -139,12 +131,29 @@ def trocar_plano_aluno(aluno_id: int, plano: PlanoUpdate, db: Session = Depends(
 
     
 # Endpoints para Turmas
-@app.post("/turmas/", response_description="Criar uma turma")
-def criar_turma(nome: str, horario: str, instrutor_id: int, db: Session = Depends(get_db)):
-   crud.criar_turma(db, nome, horario, instrutor_id)
-   return {"mensagem": "Turma criada com sucesso!"}
 
 @app.get("/turmas/{turma_id}", response_description="Consultar uma turma")
 def consultar_turma(turma_id: int, db: Session = Depends(get_db)):
    crud.consultar_turma(db, turma_id)
    return {"mensagem": "Consulta de turma concluída"}
+
+
+class TurmaCreate(BaseModel):
+    nome: str
+    horario: str
+    instrutor_id: int
+
+@app.post("/turmas/", response_description="Criar uma turma")
+def criar_turma(turma: TurmaCreate, db: Session = Depends(get_db)):
+    crud.criar_turma(db, turma.nome, turma.horario, turma.instrutor_id)
+    return {"mensagem": "Turma criada com sucesso!"}
+
+class InstrutorCreate(BaseModel):
+    nome: str
+    especialidade: str
+    horario_trabalho: str
+
+@app.post("/instrutores/", response_description="Cadastrar um instrutor")
+def cadastrar_instrutor(instrutor: InstrutorCreate, db: Session = Depends(get_db)):
+    crud.cadastrar_instrutor(db, instrutor.nome, instrutor.especialidade, instrutor.horario_trabalho)
+    return {"mensagem": "Instrutor cadastrado com sucesso!"}

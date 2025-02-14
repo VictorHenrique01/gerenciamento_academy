@@ -1,4 +1,7 @@
 // Seleciona os formulários
+
+const API_URL = "http://localhost:8000"; 
+
 const formAluno = document.getElementById("formAluno");
 const formPlano = document.getElementById("formPlano");
 const formConsultarAluno = document.getElementById("formConsultarAluno");
@@ -33,94 +36,81 @@ formAluno.addEventListener("submit", async (event) => {
        alert("Erro ao cadastrar aluno.");
    }
 });
-// Consulta de Aluno
-// Evento para o formulário de consulta
+
+
+// Consulta de Aluno por Nome
 document.getElementById("formConsultarAluno").addEventListener("submit", async function (event) {
-    event.preventDefault(); // Impede o comportamento padrão do formulário
-    // Captura o valor do campo de entrada do ID
-    const alunoId = document.getElementById("consultaIdAluno").value;
-    // Verifica se o ID foi preenchido
-    if (!alunoId) {
-        alert("Por favor, insira o ID do aluno.");
+    event.preventDefault(); // Impede o recarregamento da página
+
+    // Captura o valor do campo de entrada do nome
+    const alunoNome = document.getElementById("consultaNomeAluno").value.trim();
+
+    // Verifica se o nome foi preenchido
+    if (!alunoNome) {
+        alert("Por favor, insira o nome do aluno.");
         return;
     }
+
     try {
         // Faz a requisição para o backend
-        const response = await fetch(`http://127.0.0.1:8000/alunos/${alunoId}`);
+        const response = await fetch(`http://127.0.0.1:8000/alunos?nome=${encodeURIComponent(alunoNome)}`);
+
         // Verifica se a resposta é válida
         if (!response.ok) {
             throw new Error("Aluno não encontrado ou erro na consulta.");
         }
+
         // Converte a resposta para JSON
         const aluno = await response.json();
+
         // Exibe o resultado no HTML
-        const resultadoDiv = document.getElementById("resultadoConsulta");
+        const resultadoDiv = document.getElementById("resultadoConsultaAluno");
         resultadoDiv.innerHTML = `
-        <h3>Aluno Encontrado</h3>
-        <p><strong>ID:</strong> ${aluno.id}</p>
-        <p><strong>Nome:</strong> ${aluno.nome}</p>
-        <p><strong>Idade:</strong> ${aluno.idade}</p>
-        <p><strong>Plano:</strong> ${aluno.plano_id}</p>
+            <h3>Aluno Encontrado</h3>
+            <p><strong>ID:</strong> ${aluno.id}</p>
+            <p><strong>Nome:</strong> ${aluno.nome}</p>
+            <p><strong>Idade:</strong> ${aluno.idade}</p>
+            <p><strong>Plano:</strong> ${aluno.plano_id}</p>
         `;
     } catch (error) {
         // Trata erros e exibe uma mensagem para o usuário
         console.error(error.message);
-        alert("Erro ao consultar aluno. Verifique o ID e tente novamente.");
+        alert("Erro ao consultar aluno. Verifique o nome e tente novamente.");
     }
- });
-
-// Mapeia os valores dos planos
-const valoresPlanos = {
-    mensal: 60.00,
-    trimestral: 200.00,
-    semestral: 320.00,
-    anual: 630.00
- };
- // Atualiza o valor do plano ao selecionar no menu suspenso
- document.getElementById("nomePlano").addEventListener("change", function () {
-    const valorPlano = valoresPlanos[this.value]; // Obtém o valor do plano selecionado
-    document.getElementById("valorPlano").value = `R$ ${valorPlano.toFixed(2)}`; // Atualiza o campo de valor
- });
- // Define o valor inicial ao carregar a página
- document.addEventListener("DOMContentLoaded", function () {
-    const planoInicial = document.getElementById("nomePlano").value;
-    document.getElementById("valorPlano").value = `R$ ${valoresPlanos[planoInicial].toFixed(2)}`;
- });
- // Cadastro de Plano atualizado para enviar o valor correto
- formPlano.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const nomePlano = document.getElementById("nomePlano").value;
-    const valorPlano = valoresPlanos[nomePlano]; // Obtém o valor numérico correto
-    const plano = { nome: nomePlano, valor: valorPlano };
-    try {
-        const response = await fetch("http://127.0.0.1:8000/planos/", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(plano),
-        });
-        alert(response.ok ? "Plano cadastrado com sucesso!" : "Erro ao cadastrar plano.");
-        formPlano.reset();
-    } catch (error) {
-        alert("Erro ao cadastrar plano.");
-    }
- });
+});
  
- // Consulta de Plano
- formConsultarPlano.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const planoId = document.getElementById("consultaIdPlano").value;
+// Função para consultar todos os planos
+async function consultarPlano() {
     try {
-        const response = await fetch(`http://127.0.0.1:8000/planos/${planoId}`);
-        if (!response.ok) throw new Error("Plano não encontrado.");
-        const plano = await response.json();
-        document.getElementById("resultadoConsultaPlano").innerHTML = `
-        <h3>Plano Encontrado</h3>
-        <p><strong>ID:</strong> ${plano.id}</p>
-        <p><strong>Nome:</strong> ${plano.nome}</p>
-        <p><strong>Valor:</strong> R$ ${plano.valor.toFixed(2)}</p>
-        `;
+        const response = await fetch(`${API_URL}/planos`);
+        if (!response.ok) {
+            throw new Error("Erro ao consultar planos");
+        }
+        const planos = await response.json();
+        
+        // Exibe os planos no HTML (adiciona à div resultadoConsultaPlano)
+        const resultadoConsultaPlano = document.getElementById("resultadoConsultaPlano");
+        resultadoConsultaPlano.innerHTML = "";  // Limpa a div antes de adicionar os planos
+        
+        if (planos.length === 0) {
+            resultadoConsultaPlano.textContent = "Nenhum plano encontrado.";
+        } else {
+            planos.forEach(plano => {
+                const planoDiv = document.createElement("div");
+                planoDiv.classList.add("plano-item");
+                planoDiv.innerHTML = `<strong>Plano ID: ${plano.id} | <strong>Plano:</strong> ${plano.tipo} - <strong>Preço:</strong> R$ ${plano.preco}`;
+                resultadoConsultaPlano.appendChild(planoDiv);
+            });
+        }
     } catch (error) {
-        alert("Erro ao consultar plano.");
+        alert("Erro ao consultar planos: " + error.message);
     }
- });
+}
+
+// Chama a função para consultar todos os planos quando o botão for clicado
+const btnConsultarPlano = document.getElementById("btnConsultarPlano");
+if (btnConsultarPlano) {
+    btnConsultarPlano.addEventListener("click", consultarPlano);
+}
+
 

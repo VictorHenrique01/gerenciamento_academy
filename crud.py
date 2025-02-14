@@ -13,6 +13,20 @@ def cadastrar_aluno(db: Session, nome: str, idade: int, plano_id: int):
     except Exception as e:
         print(f"Erro ao cadastrar aluno: {e}")
 
+
+def consultar_aluno_por_nome(db: Session, nome: str):
+    try:
+        aluno = db.query(Aluno).filter(Aluno.nome.ilike(f"%{nome}%")).first()
+        if aluno:
+            print(f"Aluno ID: {aluno.id}\n Nome: {aluno.nome}\n Idade: {aluno.idade}\n Plano ID: {aluno.plano_id}")
+            return aluno
+        else:
+            print("Aluno não encontrado.")
+            return None
+    except Exception as e:
+        print(f"Erro ao consultar aluno: {e}")
+        return None
+
 # Editar Dados do Aluno
 def editar_aluno(db: Session, aluno_id: int, nome: str = None, idade: int = None, plano_id: int = None):
     try:
@@ -216,16 +230,6 @@ def consultar_turma(db: Session, turma_id: int):
    except Exception as e:
        print(f"Erro ao consultar turma: {e}")
 
-# Consulta de um alunoo específico pelo ID
-def consultar_aluno(db: Session, aluno_id: int):
-   try:
-       aluno = db.query(Aluno).filter(Aluno.id == aluno_id).first()
-       if aluno:
-           print(f"Aluno ID: {aluno.id}\n Nome: {aluno.nome}\n Idade: {aluno.idade}\n Plano ID: {aluno.plano_id}")
-       else:
-           print("Aluno não encontrado.")
-   except Exception as e:
-       print(f"Erro ao consultar aluno: {e}")
 
 def consultar_tipo_treino(db: Session, nome_treino: str):
     try:
