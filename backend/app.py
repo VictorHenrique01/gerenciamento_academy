@@ -22,6 +22,9 @@ class AlunoCreate(BaseModel):
    nome: str
    idade: int
    plano_id: int
+
+class PlanoUpdate(BaseModel):
+    novo_plano_id: int
 # Dependência do banco
 def get_db():
    db = SessionLocal()
@@ -62,8 +65,11 @@ def cadastrar_equipamento(nome: str, quantidade: int, manutencao: str, db: Sessi
 
 @app.get("/equipamentos/{nome_equipamento}", response_description="Consultar equipamento")
 def consultar_equipamento(nome_equipamento: str, db: Session = Depends(get_db)):
-   crud.consultar_equipamento(db, nome_equipamento)
-   return {"mensagem": "Consulta de equipamento concluída"}
+    # Chama o método do CRUD para consultar o equipamento
+    equipamento = crud.consultar_equipamento(db, nome_equipamento)
+    if not equipamento:
+        raise HTTPException(status_code=404, detail="Equipamento não encontrado.")
+    return equipamento
 
 @app.delete("/equipamentos/{equipamento_id}", response_description="Excluir equipamento")
 def excluir_equipamento(equipamento_id: int, db: Session = Depends(get_db)):
@@ -96,6 +102,42 @@ def editar_plano(plano_id: int, tipo: str = None, preco: int = None, db: Session
 def excluir_plano(plano_id: int, db: Session = Depends(get_db)):
    crud.excluir_plano(db, plano_id)
    return {"mensagem": "Plano excluído com sucesso!"}
+
+@app.get("/planos", response_description="Consultar todos os planos disponíveis")
+def consultar_todos_planos(db: Session = Depends(get_db)):
+    # Chama o método do CRUD para consultar todos os planos
+    planos = crud.consultar_todos_planos(db)
+    if not planos:
+        raise HTTPException(status_code=404, detail="Nenhum plano encontrado.")
+    
+    # Retorna a lista de planos
+    return planos
+
+
+@app.put("/alunos/{aluno_id}/trocar-plano")
+def trocar_plano_aluno(aluno_id: int, plano: PlanoUpdate, db: Session = Depends(get_db)):
+    print(f"Recebendo requisição para trocar plano do aluno {aluno_id} para {plano.novo_plano_id}")  # Depuração
+
+    try:
+        aluno = db.query(Aluno).filter(Aluno.id == aluno_id).first()
+        if not aluno:
+            raise HTTPException(status_code=404, detail="Aluno não encontrado.")
+
+        novo_plano = db.query(Plano).filter(Plano.id == plano.novo_plano_id).first()
+        if not novo_plano:
+            raise HTTPException(status_code=404, detail="Novo plano não encontrado.")
+
+        aluno.plano_id = plano.novo_plano_id
+        db.commit()
+        db.refresh(aluno)
+
+        return {"mensagem": f"Plano do aluno {aluno_id} alterado para {novo_plano.tipo} com sucesso!"}
+
+    except Exception as e:
+        print(f"Erro ao trocar plano do aluno: {e}")  # Depuração
+        raise HTTPException(status_code=500, detail=f"Erro ao trocar plano do aluno: {e}")
+
+    
 # Endpoints para Turmas
 @app.post("/turmas/", response_description="Criar uma turma")
 def criar_turma(nome: str, horario: str, instrutor_id: int, db: Session = Depends(get_db)):

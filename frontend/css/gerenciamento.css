@@ -5,6 +5,10 @@
    box-sizing: border-box;
    font-family: Arial, sans-serif;
 }
+
+body{
+   font-family: "Oswald", serif;
+}
 /* Estilização do cabeçalho */
 header {
    background-color: #333;
@@ -14,14 +18,17 @@ header {
 }
 
 h1{
+   font-family: "Oswald", serif;
    margin-top: 12px;
 }
 
 h2{
+   font-family: "Oswald", serif;
    margin-bottom: 15px;
 }
 
 h3{
+   font-family: "Oswald", serif;
    margin-bottom: 15px;
    text-align: center;
 }
@@ -42,6 +49,7 @@ main {
 .menu-gerenciamento button {
    padding: 12px 25px;
    font-size: 16px;
+   font-family: "Oswald", serif;
    border: none;
    cursor: pointer;
    background-color: #007bff;
@@ -81,6 +89,7 @@ button {
    cursor: pointer;
    border-radius: 5px;
    font-size: 16px;
+   font-family: "Oswald", serif;
    transition: 0.3s;
 }
 button:hover {
@@ -94,4 +103,44 @@ button:hover {
 /* Exibir a seção ativa */
 .secao-gerenciamento.ativa {
    display: block;
+}
+
+
+.equipamentos-container {
+   margin-top: 15px;
+   padding: 10px;
+   background-color: #f8f9fa;
+   border: 1px solid #ccc;
+   border-radius: 8px;
+   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+   display: none; 
+}
+
+.equipamentos-container label {
+   font-weight: bold;
+   font-family: "Oswald", serif;
+   color: #3674B5;
+   display: block;
+   margin-bottom: 5px;
+   font-size: 1.1em;
+}
+
+.equipamentos-container ul {
+   list-style: none;
+   padding: 0;
+   margin: 0;
+   display: flex;
+   flex-wrap: wrap;
+   gap: 10px;
+}
+
+.equipamentos-container li {
+   font-family: "Oswald", serif;
+   background-color: #3674B5;
+   color: #fff;
+   padding: 5px 10px;
+   border-radius: 5px;
+   font-size: 0.9em;
+   display: inline-block;
+   margin: 5px; 
 }

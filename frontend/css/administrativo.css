@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: "Oswald", serif;
     margin: 0;
     padding: 0;
     background-color: #f0f0f5;
@@ -53,10 +53,15 @@ body {
  .form-group {
     margin-bottom: 15px;
  }
- label {
+ label { 
+    font-family: Arial, sans-serif;
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
+ }
+ p{
+   font-family: "Inter", serif;
+   font-size: 14.5px;
  }
  input {
     width: 95%;

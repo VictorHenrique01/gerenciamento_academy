@@ -130,6 +130,33 @@ def excluir_plano(db: Session, plano_id: int):
     except Exception as e:
         print(f"Erro ao excluir plano: {e}")
 
+def consultar_todos_planos(db: Session):
+    try:
+        planos = db.query(Plano).all()  # Recupera todos os planos
+        return planos  # Retorna a lista de planos
+    except Exception as e:
+        print(f"Erro ao consultar planos: {e}")
+        return None
+
+
+def trocar_plano_aluno(db: Session, aluno_id: int, novo_plano_id: int):
+    try:
+        aluno = db.query(Aluno).filter(Aluno.id == aluno_id).first()  # Procurar o aluno pelo ID
+        if aluno:
+            novo_plano = db.query(Plano).filter(Plano.id == novo_plano_id).first()  # Procurar o novo plano pelo ID
+            if novo_plano:
+                aluno.plano_id = novo_plano_id  # Atualiza o plano do aluno
+                db.commit()
+                db.refresh(aluno)  # Atualiza o objeto aluno
+                print(f"Plano do aluno {aluno.nome} alterado para {novo_plano.tipo} com sucesso!")
+            else:
+                print("Novo plano não encontrado.")
+        else:
+            print("Aluno não encontrado.")
+    except Exception as e:
+        print(f"Erro ao trocar plano do aluno: {e}")
+
+
 # Reservar Aula Coletiva (Associação entre Aluno e Turma)
 def criar_turma(db: Session, nome: str, horario: str, instrutor_id: int):
     try:
@@ -155,14 +182,15 @@ def consultar_equipamento(db: Session, nome_equipamento: str):
     try:
         equipamento = db.query(Equipamento).filter(Equipamento.nome == nome_equipamento).first()
         if equipamento:
-            if equipamento.quantidade > 0:
-                print(f"Equipamento '{equipamento.nome}' disponível: {equipamento.quantidade} unidade(s) disponível(eis).")
-            else:
-                print(f"Equipamento '{equipamento.nome}' está indisponível no momento.")
-        else:
-            print("Equipamento não encontrado.")
+            return {
+                "nome": equipamento.nome,
+                "quantidade": equipamento.quantidade,
+                "manutencao": equipamento.manutencao
+            }
+        return None
     except Exception as e:
         print(f"Erro ao consultar equipamento: {e}")
+        return None
 
 
 def excluir_equipamento(db: Session, equipamento_id: int):
