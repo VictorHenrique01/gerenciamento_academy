@@ -104,7 +104,7 @@ def consultar_disponibilidade_instrutor(db: Session, periodo: str):
             print(f"Nenhum(a) instrutor(a) disponível no período {periodo}.")
     except Exception as e:
         print(f"Erro ao consultar disponibilidade de instrutores(as): {e}")
-
+        
 
 def cadastrar_plano(db: Session, tipo: str, preco: int):
     try:

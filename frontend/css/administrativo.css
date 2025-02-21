@@ -32,6 +32,18 @@ body {
  .nav-button:hover {
     background-color: #0056b3;
  }
+
+ .button-manutenção{
+   font-family: "Inter", serif;
+   color: #DFD3C3;
+   padding: 7px 12px;
+   border-radius: 5px;
+   background-color: #C5705D;
+   cursor: pointer;
+ }
+ .button-manutenção:hover{
+   background-color: #FF004D;
+ }
  /* Formulários */
  .formulario {
     display: none;

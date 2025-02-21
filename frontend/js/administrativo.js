@@ -15,9 +15,9 @@ async function consultarPlanos() {
         }
         const planos = await response.json();
         
-        // Exibe os planos no HTML (adiciona à div resultadoConsultaPlano)
+        
         const resultadoConsultaPlano = document.getElementById("resultadoConsultaPlano");
-        resultadoConsultaPlano.innerHTML = "";  // Limpa a div antes de adicionar os planos
+        resultadoConsultaPlano.innerHTML = "";  // Limpa a div antes de add os planos
         
         if (planos.length === 0) {
             resultadoConsultaPlano.textContent = "Nenhum plano encontrado.";
@@ -34,7 +34,7 @@ async function consultarPlanos() {
     }
 }
 
-// Chama a função para consultar todos os planos quando o botão for clicado
+// Chama a função para consultar tds os planos qnd o botão for clicado
 const btnConsultarPlano = document.getElementById("btnConsultarPlano");
 if (btnConsultarPlano) {
     btnConsultarPlano.addEventListener("click", consultarPlanos);
@@ -89,20 +89,27 @@ if (formConsultarEquipamento) {
             }
 
             const data = await response.json();
-            console.log("Resposta da API:", data); // 🔍 Verificar a resposta
+            console.log("Resposta da API:", data); 
 
-            // Verifica se há dados retornados
+            // dados retornados
             if (data && data.nome) {
                 resultadoDiv.innerHTML = `
                     <p><strong>Nome:</strong> ${data.nome}</p>
                     <p><strong>Quantidade de ${data.nome} na academia:</strong> ${data.quantidade}</p>
-                    <p><strong>Última manutenção feita:</strong> ${data.manutencao}</p>
-                `;
+                    <p><strong>Última manutenção feita:</strong> ${data.manutencao}</p>`;
+
+                    botaoManutencao.style.display = "block"
+                    botaoManutencao.addEventListener("click", function(){
+                        alert("Solicitação será encaminhada em breve...");
+                    })
+                    ;
             } else {
                 resultadoDiv.innerHTML = `<p>Equipamento não encontrado.</p>`;
+                botaoManutencao.style.display = "none"; 
             }
         } catch (error) {
             resultadoDiv.innerHTML = `<p style="color: red;">Erro ao consultar equipamento.</p>`;
+            botaoManutencao.style.display = "none"; 
         }
     });
 }

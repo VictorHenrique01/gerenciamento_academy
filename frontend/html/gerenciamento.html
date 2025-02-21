@@ -47,25 +47,39 @@
                     <button type="submit">Cadastrar Instrutor</button>
                 </form>
             </div>
-            
-            <!-- Cadastro de Turmas -->
-            <div id="turma" class="secao-gerenciamento">
-                <h3>Criar Turma</h3>
-                <form id="formCadastroTurma">
-                    <label for="nomeTurma">Nome da Turma conforme a sua especialidade:</label>
-                    <input type="text" id="nomeTurma" name="nomeTurma" required>
-                    
-                    <label for="horario">Horário da Aula:</label>
-                    <input type="time" id="horario" name="horario" required>
-                    
-                    <label for="instrutorTurma">Instrutor Responsável:</label>
-                    <select id="instrutorTurma" name="instrutorTurma">
-                        <!-- Opções preenchidas dinamicamente -->
-                    </select>
-                    
-                    <button type="submit">Cadastrar Turma</button>
-                </form>
-            </div>
+
+        <!-- Cadastro de Turmas -->
+        <div id="turma" class="secao-gerenciamento">
+            <h3>Criar Turma</h3>
+            <form id="formCadastroTurma">
+                <label for="nomeTurma">Nome da Turma conforme a sua especialidade:</label>
+                <select id="nomeTurma" name="nomeTurma">
+                    <option value="">Selecione uma opção</option>
+                    <option value="Boxe">Boxe</option> 
+                    <option value="Natação">Natação</option>
+                    <option value="Pilates">Pilates</option>
+                </select>
+
+                <label for="horario">Horário da Aula:</label>
+                <input type="time" id="horario" name="horario" required>
+
+                <!-- Botão oculto -->
+                <div id="botaoConsultaContainer">
+                    <button id="botaoConsulta" type="button" style="display: none; margin-top: 10px;">
+                        Consultar Disponibilidade dos Instrutores(as)
+                    </button>
+                </div>
+
+                <label for="instrutorTurma">Instrutor Responsável:</label>
+                <select id="instrutorTurma" name="instrutorTurma">
+                    <option value="">Selecione uma turma primeiro</option>
+                </select>
+
+                <button type="submit">Cadastrar Turma</button>
+            </form>
+        </div>
+
+
             
             <!-- Cadastro de Treinos -->
             <div id="treino" class="secao-gerenciamento">

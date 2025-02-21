@@ -1,4 +1,4 @@
-// Alterna entre as seções
+// Alterna entre os forms
 function mostrarSecao(secaoId) {
     const secoes = document.querySelectorAll('.secao-gerenciamento');
     secoes.forEach(secao => secao.classList.remove('ativa'));
@@ -35,102 +35,92 @@ function mostrarSecao(secaoId) {
             `;
             equipamentosSugeridosDiv.style.display = "block"; // Mostra a seção
         } else {
-            equipamentosSugeridosDiv.style.display = "none"; // Esconde se não houver equipamentos
+            equipamentosSugeridosDiv.style.display = "none"; // Esconde se não tiver equipamentos
         }
     });
 });
+
 
 document.addEventListener("DOMContentLoaded", function () {
-    carregarInstrutores();
+    const instrutoresPorTurma = {
+        "Boxe": ["Netinho"],
+        "Natação": ["Sheila", "Renan"],
+        "Pilates": ["Luana", "Tatiane"]
+    };
 
-    document.getElementById("formCadastroInstrutor").addEventListener("submit", function (event) {
-        event.preventDefault();
-        cadastrarInstrutor();
-    });
+    const periodosInstrutores = {
+        "Sheila": { inicio: "14:00", fim: "18:00" },  
+        "Renan": { inicio: "08:00", fim: "12:00" },   
+        "Netinho": { inicio: "18:00", fim: "22:00" }, 
+        "Luana": { inicio: "18:00", fim: "22:00" },   
+        "Tatiane": { inicio: "08:00", fim: "12:00" }  
+    };
 
-    document.getElementById("formCadastroTurma").addEventListener("submit", function (event) {
-        event.preventDefault();
-        cadastrarTurma();
-    });
+    const nomeTurmaSelect = document.getElementById("nomeTurma");
+    const instrutorTurmaSelect = document.getElementById("instrutorTurma");
+    const horarioInput = document.getElementById("horario");
+    const botaoConsulta = document.getElementById("botaoConsulta");
 
-    document.getElementById("formCadastroTreino").addEventListener("submit", function (event) {
-        event.preventDefault();
-        registrarTreino();
-    });
+    function atualizarInstrutores() {
+        const turmaSelecionada = nomeTurmaSelect.value;
+        instrutorTurmaSelect.innerHTML = ""; 
+
+        if (turmaSelecionada && instrutoresPorTurma[turmaSelecionada]) {
+            instrutoresPorTurma[turmaSelecionada].forEach(instrutor => {
+                const option = document.createElement("option");
+                option.value = instrutor;
+                option.textContent = instrutor;
+                instrutorTurmaSelect.appendChild(option);
+            });
+        } else {
+            const option = document.createElement("option");
+            option.value = "";
+            option.textContent = "Selecione uma turma primeiro";
+            instrutorTurmaSelect.appendChild(option);
+        }
+    }
+
+    function validarHorario() {
+        const instrutorSelecionado = instrutorTurmaSelect.value;
+        const horarioSelecionado = horarioInput.value;
+
+        if (instrutorSelecionado && horarioSelecionado) {
+            const { inicio, fim } = periodosInstrutores[instrutorSelecionado];
+
+            if (horarioSelecionado < inicio || horarioSelecionado > fim) {
+                alert(`⚠️ Profissional ${instrutorSelecionado} só dá aulas entre ${inicio} e ${fim}. Consulte a disponibilidade de instrutor(a) e escolha um horário válido.`);
+                horarioInput.value = ""; 
+
+                // Exibe o botão caso o horário seja inválido
+                botaoConsulta.style.display = "block";
+            } else {
+                // Oculta o botão se o horário for válido
+                botaoConsulta.style.display = "none";
+            }
+        }
+    }
+
+    async function consultarDisponibilidade() {
+
+        try {
+            const response = await fetch(`/instrutores/${periodo}`);
+            const data = await response.json();
+
+            if (data.instrutores && data.instrutores.length > 0) {
+                alert(`Instrutores disponíveis no período ${periodo}: \n` + data.instrutores.map(i => `- ${i.nome} (Especialidade: ${i.especialidade})`).join("\n"));
+            } else {
+                alert(`Nenhum instrutor disponível no período ${periodo}.`);
+            }
+        } catch (error) {
+            console.error("Erro ao consultar disponibilidade:", error);
+            alert("Erro ao consultar disponibilidade. Tente novamente.");
+        }
+    }
+
+    botaoConsulta.addEventListener("click", consultarDisponibilidade);
+    nomeTurmaSelect.addEventListener("change", atualizarInstrutores);
+    horarioInput.addEventListener("change", validarHorario);
 });
 
-function carregarInstrutores() {
-    fetch("/instrutores/")
-        .then(response => response.json())
-        .then(data => {
-            const instrutorSelect = document.getElementById("instrutorTurma");
-            instrutorSelect.innerHTML = "";
-            data.forEach(instrutor => {
-                let option = document.createElement("option");
-                option.value = instrutor.id;
-                option.textContent = instrutor.nome;
-                instrutorSelect.appendChild(option);
-            });
-        })
-        .catch(error => console.error("Erro ao carregar instrutores:", error));
-}
 
-function cadastrarInstrutor() {
-    const nome = document.getElementById("nomeInstrutor").value;
-    const especialidade = document.getElementById("especialidade").value;
-    const horario_trabalho = document.getElementById("periodo").value;
-
-    fetch("/instrutores/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome, especialidade, horario_trabalho })
-    })
-    .then(response => response.text()) // Usa text() ao invés de json()
-    .then(text => {
-        try {
-            return JSON.parse(text); // Tenta converter para JSON
-        } catch (error) {
-            return { mensagem: text || "Resposta vazia do servidor" }; // Se falhar, assume que é uma string vazia
-        }
-    })
-    .then(data => {
-        alert(data.mensagem);
-        carregarInstrutores();
-    })
-    .catch(error => console.error("Erro ao cadastrar instrutor:", error));
-}    
-
-function cadastrarTurma() {
-    const nome = document.getElementById("nomeTurma").value;
-    const horario = document.getElementById("horario").value;
-    const instrutor_id = document.getElementById("instrutorTurma").value;
-
-    fetch("/turmas/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome, horario, instrutor_id })
-    })
-        .then(response => response.json())
-        .then(data => {
-            alert(data.mensagem);
-        })
-        .catch(error => console.error("Erro ao cadastrar turma:", error));
-}
-
-function registrarTreino() {
-    const tipo = document.getElementById("tipoTreino").value;
-    const aluno_id = document.getElementById("idAluno").value;
-    const instrutor_id = document.getElementById("idInstrutorTreino").value;
-
-    fetch("/treinos/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tipo, aluno_id, instrutor_id })
-    })
-        .then(response => response.json())
-        .then(data => {
-            alert(data.mensagem);
-        })
-        .catch(error => console.error("Erro ao registrar treino:", error));
-}
 
